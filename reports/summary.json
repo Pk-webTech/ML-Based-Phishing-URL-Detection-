@@ -1,0 +1,41 @@
+{
+  "data_source": "SYNTHETIC dataset (no data/urls.csv found)",
+  "n_urls": 9704,
+  "test_metrics": {
+    "random_forest": {
+      "precision": 0.9678510998307953,
+      "recall": 0.9794520547945206,
+      "f1": 0.9736170212765958,
+      "roc_auc": 0.9633106425773982
+    },
+    "gradient_boosting": {
+      "precision": 0.9677692960135709,
+      "recall": 0.9768835616438356,
+      "f1": 0.9723050703025139,
+      "roc_auc": 0.9656160839284764
+    },
+    "pytorch_mlp": {
+      "precision": 0.9670050761421319,
+      "recall": 0.978595890410959,
+      "f1": 0.9727659574468085,
+      "roc_auc": 0.9674452630739514
+    },
+    "isolation_forest_anomaly": {
+      "precision": 0.8898305084745762,
+      "recall": 0.898972602739726,
+      "f1": 0.8943781942078365,
+      "roc_auc": 0.9250662336741747
+    },
+    "ensemble_mean": {
+      "precision": 0.967032967032967,
+      "recall": 0.9794520547945206,
+      "f1": 0.9732028923862186,
+      "roc_auc": 0.9650373699693419
+    }
+  },
+  "cv_f1": {
+    "random_forest": 0.9745690390851681,
+    "gradient_boosting": 0.9734573696338653
+  },
+  "ensemble_threshold_98_precision": 0.9865250204983523
+}

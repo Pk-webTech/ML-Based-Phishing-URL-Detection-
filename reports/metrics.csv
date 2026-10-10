@@ -1,0 +1,6 @@
+,precision,recall,f1,roc_auc
+random_forest,0.9679,0.9795,0.9736,0.9633
+gradient_boosting,0.9678,0.9769,0.9723,0.9656
+pytorch_mlp,0.967,0.9786,0.9728,0.9674
+isolation_forest_anomaly,0.8898,0.899,0.8944,0.9251
+ensemble_mean,0.967,0.9795,0.9732,0.965

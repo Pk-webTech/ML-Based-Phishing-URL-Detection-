@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+models/
+reports/flagged_urls.csv
+.pytest_cache/

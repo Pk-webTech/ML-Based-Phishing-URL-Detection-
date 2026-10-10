@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhishLens</title>
+  <meta name="description" content="Check whether a link looks like phishing. PhishLens analyses the text of the address and never visits it.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <div class="top-inner">
+      <a class="brand" href="#check" aria-label="PhishLens, home">
+        <svg class="brand-mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+          <circle cx="11" cy="11" r="7.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M16.6 16.6 23 23" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M7.6 11h6.8" stroke="var(--bad)" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <span>PhishLens</span>
+      </a>
+      <nav class="tabs" aria-label="Main">
+        <a href="#check" data-tab="check">Check</a>
+        <a href="#bulk" data-tab="bulk">Bulk scan</a>
+        <a href="#history" data-tab="history">History</a>
+        <a href="#model" data-tab="model">Model</a>
+      </nav>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to dark theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path id="theme-icon" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- Check -->
+    <section class="view" id="view-check" data-title="Check a link" hidden>
+      <div class="intro">
+        <h1 tabindex="-1">Check a link before you open it</h1>
+        <p class="lede">Paste any address. PhishLens reads the text of the link and never visits it.</p>
+      </div>
+
+      <form id="check-form" class="finder" novalidate>
+        <label for="url-input">Link</label>
+        <div class="finder-row">
+          <input id="url-input" name="url" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false"
+                 placeholder="https://example.com/account/login" maxlength="2048" aria-describedby="url-error">
+          <button class="btn primary" type="submit" id="check-btn">Check link</button>
+        </div>
+        <p class="field-error" id="url-error" role="alert" hidden></p>
+        <div class="finder-opts">
+          <fieldset class="seg-control" data-sensitivity>
+            <legend>Sensitivity</legend>
+            <div class="seg-options" role="radiogroup" aria-label="Sensitivity"></div>
+          </fieldset>
+          <div class="examples">
+            <span class="examples-label">Try an example</span>
+            <button type="button" class="chip" data-example="http://paypal.verify.k3j29dkx1a.xyz/login?id=9ak2l3jd0x">Fake PayPal sign-in</button>
+            <button type="button" class="chip" data-example="http://apple.com@zz81jd02k.tk/signin">@ trick</button>
+            <button type="button" class="chip" data-example="https://github.com/Pk-webTech">Normal site</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="result" aria-live="polite"></div>
+    </section>
+
+    <!-- Bulk -->
+    <section class="view" id="view-bulk" data-title="Bulk scan" hidden>
+      <div class="intro">
+        <h1 tabindex="-1">Scan a list of links</h1>
+        <p class="lede">Paste links one per line, or upload a .txt or .csv file. Up to <span data-max-batch>1,000</span> links at a time.</p>
+      </div>
+
+      <form id="bulk-form" class="bulk-input" novalidate>
+        <label for="bulk-text">Links</label>
+        <textarea id="bulk-text" rows="8" spellcheck="false" autocomplete="off" autocapitalize="off"
+                  placeholder="https://example.com&#10;http://192.168.4.7/login"></textarea>
+        <p class="field-error" id="bulk-error" role="alert" hidden></p>
+        <div class="bulk-actions">
+          <button class="btn primary" type="submit" id="bulk-btn">Scan links</button>
+          <label class="btn" for="bulk-file">Upload file</label>
+          <input id="bulk-file" type="file" accept=".txt,.csv,text/plain,text/csv" class="sr-only">
+          <button class="btn quiet" type="button" id="bulk-sample">Use sample links</button>
+          <fieldset class="seg-control" data-sensitivity>
+            <legend>Sensitivity</legend>
+            <div class="seg-options" role="radiogroup" aria-label="Sensitivity"></div>
+          </fieldset>
+        </div>
+      </form>
+
+      <div id="bulk-result" aria-live="polite"></div>
+    </section>
+
+    <!-- History -->
+    <section class="view" id="view-history" data-title="History" hidden>
+      <div class="intro">
+        <h1 tabindex="-1">History</h1>
+        <p class="lede">Links you checked one at a time. Saved only in this browser.</p>
+      </div>
+      <div id="history-body"></div>
+    </section>
+
+    <!-- Model -->
+    <section class="view" id="view-model" data-title="Model" hidden>
+      <div class="intro">
+        <h1 tabindex="-1">How the model performs</h1>
+        <p class="lede">Scores from the held-out test set the last time <code>train.py</code> ran.</p>
+      </div>
+      <div id="model-body"></div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p>PhishLens analyses link text only. A result is a lead for review, not a verdict. Never enter passwords on a link you are unsure about.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

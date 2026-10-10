@@ -1,0 +1,12 @@
+# sample URLs for testing scan_urls.py
+https://www.google.com/search?q=machine+learning
+https://github.com/Pk-webTech
+https://en.wikipedia.org/wiki/Phishing
+https://www.paypal.com/signin
+http://192.168.44.12:8080/login/paypal/a8x2k1.php
+http://paypal.verify.k3j29dkx1a.xyz/login?id=9ak2l3jd0x
+https://secure-microsoft-billing-center.top/x8s7d9a2
+http://apple.com@zz81jd02k.tk/signin
+https://bit.ly/3xYz9Qa
+https://www.amazon.com/dp/B09XYZ123
+http://netflix-update-account-help.click/k2j39dl1
