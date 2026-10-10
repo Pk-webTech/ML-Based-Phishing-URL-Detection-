@@ -1,13 +1,3 @@
-"""PhishLens web app.
-
-Run:   python app.py            ->  http://127.0.0.1:8000
-Env:   PHISHLENS_HOST, PHISHLENS_PORT, PHISHLENS_RATE_LIMIT (requests per minute per client, default 120)
-
-Security notes
-  * The server never opens, resolves or downloads a submitted link; it only analyses the text.
-  * Inputs are length/count limited and validated; responses carry strict security headers.
-  * Binds to 127.0.0.1 by default. Put it behind a reverse proxy with TLS if you expose it.
-"""
 from __future__ import annotations
 
 import logging

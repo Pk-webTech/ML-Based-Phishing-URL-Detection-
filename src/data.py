@@ -1,13 +1,3 @@
-"""Dataset loading.
-
-Real data:  put a CSV with columns `url,label` (label: 1 = phishing, 0 = legitimate)
-            at data/urls.csv  (or pass --data path). Public sources: PhishTank / OpenPhish
-            feeds for phishing, Tranco top-sites list for legitimate URLs.
-
-No CSV?     A synthetic generator produces a realistic-looking, deliberately noisy dataset
-            so the whole pipeline can be run and tested end to end. Metrics on synthetic
-            data are NOT representative of real-world performance.
-"""
 from __future__ import annotations
 
 import random

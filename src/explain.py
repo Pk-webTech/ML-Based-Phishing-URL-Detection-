@@ -1,7 +1,3 @@
-"""Human-readable explanations: URL anatomy (segments with risk notes) and ranked risk signals.
-
-Everything here works on the URL string only; the link is never opened or resolved.
-"""
 from __future__ import annotations
 
 from urllib.parse import urlparse

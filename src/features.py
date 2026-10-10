@@ -1,8 +1,3 @@
-"""Lexical and host-based feature extraction for URL classification.
-
-All features are computed offline from the URL string itself (no network calls),
-so extraction is fast, deterministic and safe to run on untrusted URLs.
-"""
 from __future__ import annotations
 
 import math

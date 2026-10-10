@@ -1,4 +1,3 @@
-"""PyTorch MLP classifier with a scikit-learn-style interface."""
 from __future__ import annotations
 
 import numpy as np
