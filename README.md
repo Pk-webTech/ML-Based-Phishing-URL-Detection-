@@ -10,11 +10,7 @@ It ships with a small web app (PhishLens) for checking links by hand, and a comm
   </a>
 </p>
 
-> ## 🚀 Live demo: **[https://ml-based-phishing-url-detection-jfrd.onrender.com](https://ml-based-phishing-url-detection-jfrd.onrender.com)**
->
-> Open it, paste any link and see whether it looks like phishing. Nothing to install, and the link you paste is never visited.
->
-> *The demo runs on Render's free tier, so the first load can take 30 to 60 seconds while the server wakes up.*
+> ## 🚀 Live demo: **[https://ml-based-phishing-url-detection-jfrd.onrender.com](https://ml-based-phishing-url-detection-jfrd.onrender.com)*
 
 ![Checking a link in PhishLens](docs/check.png)
 
