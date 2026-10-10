@@ -4,6 +4,18 @@ A classifier that looks at a URL, and only the URL, and decides whether it is pr
 
 It ships with a small web app (PhishLens) for checking links by hand, and a command-line scanner that can run from cron and flag suspicious URLs out of a feed.
 
+<p align="center">
+  <a href="https://ml-based-phishing-url-detection-jfrd.onrender.com">
+    <img src="https://img.shields.io/badge/%F0%9F%94%97%20LIVE%20DEMO-Try%20PhishLens%20now-2B4BD8?style=for-the-badge" alt="Live demo: PhishLens">
+  </a>
+</p>
+
+> ## 🚀 Live demo: **[https://ml-based-phishing-url-detection-jfrd.onrender.com](https://ml-based-phishing-url-detection-jfrd.onrender.com)**
+>
+> Open it, paste any link and see whether it looks like phishing. Nothing to install, and the link you paste is never visited.
+>
+> *The demo runs on Render's free tier, so the first load can take 30 to 60 seconds while the server wakes up.*
+
 ![Checking a link in PhishLens](docs/check.png)
 
 ## What's in it
@@ -47,9 +59,17 @@ Stratified 80/20 split, scored on the held-out 20%. Five-fold cross-validated F1
 
 These numbers come from the generated dataset the repo falls back to when there is no `data/urls.csv` (about 9.7k URLs, with 3% of the labels deliberately flipped to imitate noisy feeds). That noise caps accuracy near 97%, which is why every model lands in the same place. Read the table as proof that the pipeline works end to end, not as a claim about real-world accuracy. Add a real dataset (below) and re-run `python train.py` to get numbers that mean something.
 
+The live demo is trained on this same generated data, so the **Model** tab there shows a "Practice data" banner.
+
 The other charts are in `reports/`: confusion matrices for each model and the Random Forest's top features.
 
 ## Running it
+
+### Option 1: Use the live demo
+
+👉 **[https://ml-based-phishing-url-detection-jfrd.onrender.com](https://ml-based-phishing-url-detection-jfrd.onrender.com)**
+
+### Option 2: Run it locally
 
 You need Python 3.10 or newer.
 
@@ -64,6 +84,15 @@ python app.py                  # serves http://127.0.0.1:8000
 ```
 
 Trained models are not committed, so run `python train.py` before the app or the scanner. On Windows, `run_app.bat` does the whole setup, trains if needed and opens the browser.
+
+### Option 3: Docker
+
+```bash
+docker build -t phishlens .
+docker run -p 7860:7860 phishlens     # serves http://localhost:7860
+```
+
+The image trains the models during the build. The live demo is deployed from this Dockerfile on Render.
 
 ### Using real data
 
@@ -81,6 +110,8 @@ Input can be a text file with one URL per line, a CSV with a `url` column, or `-
 
 ## The web app
 
+**Try it live: [ml-based-phishing-url-detection-jfrd.onrender.com](https://ml-based-phishing-url-detection-jfrd.onrender.com)**
+
 The Check tab splits a link into protocol, subdomain, main domain, path and query, underlines each part by how risky it looks, and gives a one-line reason for each. Next to that it lists the warning signs it found and shows how each model voted, so you can see when they disagree. Bulk scan takes up to 1,000 links, pasted or uploaded, with sorting, filtering and CSV export. History and Model tabs round it out.
 
 A few choices worth mentioning:
@@ -89,7 +120,7 @@ A few choices worth mentioning:
 - Inputs are length-limited and validated, API calls are rate limited, and responses carry a strict Content-Security-Policy.
 - CSV exports neutralise cells that start with `=`, `+`, `-` or `@`, so a hostile URL cannot turn into a spreadsheet formula.
 - "Copy safe version" turns `https://example.com` into `hxxps://example[.]com` for pasting into tickets and chat.
-- It binds to 127.0.0.1 by default. If you expose it, put it behind a TLS reverse proxy.
+- Locally it binds to 127.0.0.1 by default. If you expose it yourself, put it behind a TLS reverse proxy.
 
 ## Tests
 
@@ -109,10 +140,11 @@ src/features.py      feature extraction
 src/nn.py            PyTorch classifier
 src/explain.py       URL breakdown and plain-language warning signs
 src/predictor.py     model loading and scoring for the app
-src/data.py         dataset loading and the generated fallback data
+src/data.py          dataset loading and the generated fallback data
 static/              front end (HTML, CSS, JS, no build step)
 tests/               API and parsing tests
 reports/             metrics and charts from the last training run
+Dockerfile           container image used for the hosted demo
 ```
 
 ## Limitations
