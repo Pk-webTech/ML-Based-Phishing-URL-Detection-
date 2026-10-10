@@ -1,0 +1,36 @@
+name: PhishLens CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install CPU PyTorch
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install project dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install pytest
+        run: pip install pytest
+
+      - name: Train PhishLens models
+        run: python train.py
+
+      - name: Run automated tests
+        run: python -m pytest -q

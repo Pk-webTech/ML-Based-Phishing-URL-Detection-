@@ -4,3 +4,13 @@ __pycache__/
 models/
 reports/flagged_urls.csv
 .pytest_cache/
+# Python environments
+.venv/
+# Python cache
+# Model artifacts
+# Sensitive configuration
+.env
+.env.*
+!.env.example
+# Logs
+*.log
