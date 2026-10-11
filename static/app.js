@@ -496,8 +496,23 @@
     const facts = h('div', { class: 'facts' },
       h('p', {}, 'Trained on ', h('b', { text: Number(rep.n_urls).toLocaleString() + ' links' }), ' from ', String(rep.data_source), '.'));
     if (rep.cv_f1) facts.append(h('p', {}, '5-fold cross-validation F1: ', h('b', { text: Object.entries(rep.cv_f1).map(([k, v]) => (names[k] || k) + ' ' + v.toFixed(3)).join(', ') }), '.'));
+    const sp = rep.split;
+    if (sp && sp.test) {
+      const span = sp.test.date_from ? ' (newest links, ' + sp.test.date_from + ' to ' + sp.test.date_to + ')' : '';
+      facts.append(h('p', {}, sp.mode === 'time' ? 'Chronological split: ' : 'Random split: ',
+        h('b', { text: Number(sp.train.n).toLocaleString() + ' train, ' + Number(sp.val.n).toLocaleString() + ' validation, ' + Number(sp.test.n).toLocaleString() + ' test' }),
+        span + '. Every score above comes from the test part.'));
+    }
     const strict = rep.ensemble_threshold_98_precision;
-    if (strict) facts.append(h('p', {}, 'The Strict sensitivity alerts at ', h('b', { text: pct(strict) }), ', the lowest score that kept precision at 98% or higher on the test set.'));
+    const st = rep.strict_threshold_on_test;
+    if (strict) {
+      facts.append(h('p', {}, 'The Strict sensitivity alerts at ', h('b', { text: pct(strict) }),
+        st && st.found_on_validation === false
+          ? ', a fallback: no score reached 98% precision on the validation set.'
+          : ', the lowest score that reached 98% precision on the validation set.'));
+      if (st) facts.append(h('p', {}, 'On the untouched test set that threshold gives ',
+        h('b', { text: 'precision ' + st.precision.toFixed(3) + ' and recall ' + st.recall.toFixed(3) }), '.'));
+    }
     facts.append(h('p', { text: 'Precision is how many alerts were real phishing. Recall is how much of the phishing was caught. F1 balances the two.' }));
     parts.push(facts);
 

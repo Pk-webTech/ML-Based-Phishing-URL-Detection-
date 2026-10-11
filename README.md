@@ -37,7 +37,7 @@ Most phishing detectors that score well lean on page content, certificate data o
 
 **Anomaly detection.** The Isolation Forest never sees a phishing example. It learns what ordinary legitimate URLs look like and scores how far a new one sits from that. On its own it is clearly weaker than the supervised models, but it works as a second opinion and it is the only part that could catch a pattern the training labels never covered.
 
-**Choosing a threshold.** The default alert cut-off is 0.5. For analysts who would rather see fewer false alarms, `train.py` also finds the lowest score on the test set that keeps precision at 98% or higher. The app and the scanner expose it as Strict mode.
+**Splitting and choosing a threshold.** Data is split three ways: train (fit the models), validation (pick the Strict threshold) and test (the only source of reported scores). When `data/urls.csv` has a `date` column the split is chronological, so the models are judged on links newer than anything they trained on. Undated rows, such as legitimate links from a ranking list, are split at random in the same proportions. The default alert cut-off is 0.5. For analysts who would rather see fewer false alarms, `train.py` finds the lowest validation score that keeps precision at 98% or higher (with at least 20 alerts behind it) and then reports what that threshold does on the untouched test set. The app and the scanner expose it as Strict mode.
 
 ## Results
 
@@ -92,7 +92,17 @@ The image trains the models during the build. The live demo is deployed from thi
 
 ### Using real data
 
-`train.py` reads `data/urls.csv` if it exists. It needs two columns: `url` and `label` (1 for phishing, 0 for legitimate). Phishing URLs are available from PhishTank and OpenPhish, and the Tranco list works for legitimate ones. Without the file it uses the generated data, and the Model tab in the app says so.
+`train.py` reads `data/urls.csv` if it exists. It needs `url` and `label` (1 for phishing, 0 for legitimate), plus an optional `date` column that turns on the chronological split. Without the file it uses the generated data, and the Model tab in the app says so.
+
+To build the file from real feeds, download PhishTank's `verified_online.csv` and the Tranco `top-1m.csv`, then:
+
+```bash
+python scripts/prepare_data.py --phishtank verified_online.csv --tranco top-1m.csv
+python scripts/prepare_data.py --phishtank verified_online.csv --tranco top-1m.csv --root-only
+python train.py                  # chronological split automatically; --split random to compare
+```
+
+Tranco lists domains, not full links, so legitimate rows have no path while phishing rows usually do, and a model can score well just by noticing that. `--root-only` trims phishing links to scheme and host so the two classes look alike. Run both ways and compare: the gap shows how much of the score came from the path.
 
 ### Command-line scanner
 

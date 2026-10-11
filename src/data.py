@@ -80,12 +80,33 @@ def make_synthetic(n: int = 12000, seed: int = 42, label_noise: float = 0.03) ->
     return pd.DataFrame(rows, columns=["url", "label"])
 
 
+def _canonical(url: str) -> str:
+    """Key used to drop near-identical rows (case, trailing slash and scheme differences)."""
+    u = url.strip().lower()
+    for prefix in ("https://", "http://"):
+        if u.startswith(prefix):
+            u = u[len(prefix):]
+    return u.rstrip("/")
+
+
 def load_dataset(path: str | None = None, n_synthetic: int = 12000) -> tuple[pd.DataFrame, str]:
+    """Load urls.csv (columns: url, label, optional date) or fall back to generated data.
+
+    The optional ``date`` column (any format pandas can parse, for example PhishTank's
+    ``submission_time``) enables a chronological train/validation/test split.
+    """
     p = Path(path) if path else Path(__file__).resolve().parent.parent / "data" / "urls.csv"
     if p.exists():
-        df = pd.read_csv(p)
-        df = df[["url", "label"]].dropna().drop_duplicates("url")
+        raw = pd.read_csv(p)
+        cols = ["url", "label"] + (["date"] if "date" in raw.columns else [])
+        df = raw[cols].dropna(subset=["url", "label"]).copy()
+        df["url"] = df["url"].astype(str).str.strip()
         df["label"] = df["label"].astype(int)
+        if "date" in df.columns:
+            df["date"] = pd.to_datetime(df["date"], errors="coerce", utc=True).dt.tz_localize(None)
+        df = df[df.url != ""]
+        df = df.drop_duplicates("url")
+        df = df.loc[~df.url.map(_canonical).duplicated()]
         return df.reset_index(drop=True), f"real dataset: {p}"
     df = make_synthetic(n_synthetic).drop_duplicates("url").reset_index(drop=True)
     return df, "SYNTHETIC dataset (no data/urls.csv found)"
